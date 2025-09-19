@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using OgcApi.Net.Modules;
 using OgcApi.Net.Options;
 using OgcApi.Net.Resources;
 using System;
@@ -21,10 +22,13 @@ public class ConformanceController : ControllerBase
 
     private readonly ILogger _logger;
 
-    public ConformanceController(IOptionsMonitor<OgcApiOptions> apiOptions, ILoggerFactory logger)
+    private readonly IEnumerable<ILinksExtension> _linkExtensions;
+
+    public ConformanceController(IOptionsMonitor<OgcApiOptions> apiOptions, ILoggerFactory logger,
+        IEnumerable<ILinksExtension> linksExtensions)
     {
         _apiOptions = apiOptions.CurrentValue;
-
+        _linkExtensions = linksExtensions;
         _logger = logger.CreateLogger("OgcApi.Net.Controllers.ConformanceController");
 
         try
@@ -70,6 +74,9 @@ public class ConformanceController : ControllerBase
             conformsTo.Add(new Uri("http://www.opengis.net/spec/ogcapi-tiles-1/1.0/conf/tileset"));
             conformsTo.Add(new Uri("http://www.opengis.net/spec/ogcapi-tiles-1/1.0/conf/tilesets-list"));
         }
+
+        foreach (var linkExtension in _linkExtensions)
+            conformsTo.AddRange(linkExtension.GetConformsTo());
 
         return new Conformance
         {

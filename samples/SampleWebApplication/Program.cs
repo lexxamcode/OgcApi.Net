@@ -9,6 +9,7 @@ using OgcApi.Net.Options;
 using OgcApi.Net.PostGis;
 using OgcApi.Net.Schemas;
 using OgcApi.Net.SqlServer;
+using OgcApi.Net.Styles;
 using SampleWebApplication;
 using ServiceDefaults;
 
@@ -20,6 +21,8 @@ builder.Services.AddOgcApiSqlServerProvider();
 builder.Services.AddOgcApiPostGisProvider();
 builder.Services.AddOgcApiMbTilesProvider();
 builder.Services.AddSchemasOpenApiExtension();
+
+builder.Services.AddOgcApiStylesLinks();
 
 // If the connection string is configured in the ogcapi.json file
 // builder.Services.AddOgcApi("ogcapi.json", TileAccess.TilesAccessDelegate, TileAccess.FeatureAccessDelegate);

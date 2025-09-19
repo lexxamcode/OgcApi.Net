@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Extensions;
+using OgcApi.Net.Modules;
 using OgcApi.Net.OpenApi;
 using OgcApi.Net.Options;
 using OgcApi.Net.Resources;
@@ -26,11 +27,14 @@ public class LandingPageController : ControllerBase
 
     private readonly IOpenApiGenerator _openApiGenerator;
 
-    public LandingPageController(IOptionsMonitor<OgcApiOptions> apiOptions, IOpenApiGenerator openApiGenerator, ILoggerFactory logger)
+    private readonly IEnumerable<ILinksExtension> _linkExtensions;
+
+    public LandingPageController(IOptionsMonitor<OgcApiOptions> apiOptions, IOpenApiGenerator openApiGenerator,
+        ILoggerFactory logger, IEnumerable<ILinksExtension> linksExtensions)
     {
         _apiOptions = apiOptions.CurrentValue;
+        _linkExtensions = linksExtensions;
         _openApiGenerator = openApiGenerator;
-
         _logger = logger.CreateLogger("OgcApi.Net.Controllers.LandingPageController");
 
         try
@@ -108,6 +112,9 @@ public class LandingPageController : ControllerBase
                     Title = "Feature collections provided by the API"
                 }
             ];
+
+            foreach (var linkExtension in _linkExtensions)
+                linkExtension.AddLandingLinks(baseUri, links);
         }
         else
         {
