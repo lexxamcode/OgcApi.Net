@@ -27,13 +27,13 @@ public class LandingPageController : ControllerBase
 
     private readonly IOpenApiGenerator _openApiGenerator;
 
-    private readonly IEnumerable<ILinksExtension> _linkExtensions;
+    private readonly IEnumerable<ILinksExtension> _linksExtensions;
 
     public LandingPageController(IOptionsMonitor<OgcApiOptions> apiOptions, IOpenApiGenerator openApiGenerator,
         ILoggerFactory logger, IEnumerable<ILinksExtension> linksExtensions)
     {
         _apiOptions = apiOptions.CurrentValue;
-        _linkExtensions = linksExtensions;
+        _linksExtensions = linksExtensions;
         _openApiGenerator = openApiGenerator;
         _logger = logger.CreateLogger("OgcApi.Net.Controllers.LandingPageController");
 
@@ -113,7 +113,7 @@ public class LandingPageController : ControllerBase
                 }
             ];
 
-            foreach (var linkExtension in _linkExtensions)
+            foreach (var linkExtension in _linksExtensions)
                 linkExtension.AddLandingLinks(baseUri, links);
         }
         else

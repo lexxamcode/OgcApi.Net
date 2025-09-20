@@ -22,13 +22,13 @@ public class ConformanceController : ControllerBase
 
     private readonly ILogger _logger;
 
-    private readonly IEnumerable<ILinksExtension> _linkExtensions;
+    private readonly IEnumerable<ILinksExtension> _linksExtensions;
 
     public ConformanceController(IOptionsMonitor<OgcApiOptions> apiOptions, ILoggerFactory logger,
         IEnumerable<ILinksExtension> linksExtensions)
     {
         _apiOptions = apiOptions.CurrentValue;
-        _linkExtensions = linksExtensions;
+        _linksExtensions = linksExtensions;
         _logger = logger.CreateLogger("OgcApi.Net.Controllers.ConformanceController");
 
         try
@@ -75,7 +75,7 @@ public class ConformanceController : ControllerBase
             conformsTo.Add(new Uri("http://www.opengis.net/spec/ogcapi-tiles-1/1.0/conf/tilesets-list"));
         }
 
-        foreach (var linkExtension in _linkExtensions)
+        foreach (var linkExtension in _linksExtensions)
             conformsTo.AddRange(linkExtension.GetConformsTo());
 
         return new Conformance
