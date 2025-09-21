@@ -1,9 +1,8 @@
-﻿using OgcApi.Net.Styles.Model;
+﻿using OgcApi.Net.Styles.Model.Metadata;
 
 namespace OgcApi.Net.Styles.Storage;
 
 public interface IMetadataStorage
 {
-    public Task Add(OgcStyleMetadata metadata);
-    public Task Update(string styleId, OgcStyleMetadata updatedMetadata);
+    public Task AddMetadata(string baseResource, string styleId, OgcStyleMetadata metadata);
 }

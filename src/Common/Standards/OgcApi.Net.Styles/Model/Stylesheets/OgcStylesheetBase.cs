@@ -1,13 +1,11 @@
-﻿using OgcApi.Net.Resources;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace OgcApi.Net.Styles.Model;
+namespace OgcApi.Net.Styles.Model.Stylesheets;
 
 /// <summary>
-/// Stylesheet
+/// Stylesheet base information
 /// </summary>
-public class OgcStylesheet
+public class OgcStylesheetBase
 {
     /// <summary>
     /// Title
@@ -54,8 +52,8 @@ public class OgcStylesheet
     public bool Native { get; set; }
 
     /// <summary>
-    /// Link
+    /// Tiling scheme
     /// </summary>
-    [JsonPropertyName("link")]
-    public required Link Link { get; set; }
+    [JsonPropertyName("tilingScheme")]
+    public string? TilingScheme { get; set; }
 }

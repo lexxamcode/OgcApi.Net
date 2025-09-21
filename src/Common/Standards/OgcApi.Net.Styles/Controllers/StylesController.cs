@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OgcApi.Net.Resources;
 using OgcApi.Net.Styles.Model;
+using OgcApi.Net.Styles.Model.Metadata;
+using OgcApi.Net.Styles.Model.Stylesheets;
+using OgcApi.Net.Styles.Storage;
 
 namespace OgcApi.Net.Styles.Controllers;
 
@@ -10,54 +12,72 @@ namespace OgcApi.Net.Styles.Controllers;
 [ApiController]
 [Route("api/ogc/collections")]
 [ApiExplorerSettings(GroupName = "ogc")]
-public class StylesController : ControllerBase
+public class StylesController(IStylesStorage stylesStorage, IMetadataStorage metadataStorage) : ControllerBase
 {
     [HttpGet("{collectionId}/styles")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult GetStyles(string collectionId)
+    public async Task<ActionResult<OgcStyles>> GetStyles(string collectionId)
     {
-        var styles = new OgcStyles();
-        var nightStyle = new OgcStyle
+        try
         {
-            Id = "night",
-            Title = "Topographic night style",
-            Links = [
-                new Link {
-                    Href = new Uri("https://example.com/api/v1/styles/night?f=mapbox"),
-                    Type = "application/vnd.mapbox.style+json",
-                    Rel = "stylesheet"
-                }
-            ]
-        };
-        styles.Styles.Add(nightStyle);
+            var styles = await stylesStorage.GetStyles(collectionId);
+            return Ok(styles);
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
 
-        return Ok(styles);
     }
 
     [HttpGet("{collectionId}/styles/{styleId}")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult GetStyle(string collectionId, string styleId, string? f)
+    public async Task<ActionResult> GetStyle(string collectionId, string styleId, string? f)
     {
-        if (string.IsNullOrEmpty(f))
+        try
         {
-            // return style entry with links
-        }
+            if (string.IsNullOrEmpty(f))
+            {
+                var style = await stylesStorage.GetStyle(collectionId, styleId);
+                return Ok(style);
+            }
 
-        // return stylesheet with format "f"
-        return Ok();
+            var stylesheet = await stylesStorage.GetStylesheet(collectionId, styleId, f);
+            return Ok(stylesheet);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 
-    [HttpGet("{collectionId}/styles/{styleId}/metadata")]
-    [Produces("application/json")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult GetStyleMetadata(string collectionId, string styleId)
+    [HttpPost("{collectionId}/styles")]
+    public async Task<ActionResult> PostStyle(string collectionId, [FromBody] OgcStylesheetPost addStyleParameters)
     {
-        // return style metadata
-        return Ok();
+        // Add new style
+        var newStylesheet = await stylesStorage.AddStyle(collectionId, addStyleParameters);
+
+        // Add a metadata for the new style
+        var newlyAddedStyleMetadata = new OgcStyleMetadata
+        {
+            Id = addStyleParameters.StyleId,
+            Created = DateTime.UtcNow,
+            Updated = DateTime.UtcNow,
+            Stylesheets = [
+                newStylesheet
+            ]
+        };
+        await metadataStorage.AddMetadata(collectionId, addStyleParameters.StyleId, newlyAddedStyleMetadata);
+
+        // return 201 Created
+        return CreatedAtAction(
+            nameof(GetStyle),
+            new { collectionId, styleId = addStyleParameters.StyleId },
+            null
+        );
     }
 }

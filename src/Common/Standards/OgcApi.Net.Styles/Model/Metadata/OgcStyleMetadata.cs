@@ -1,7 +1,8 @@
 ﻿using OgcApi.Net.Resources;
+using OgcApi.Net.Styles.Model.Stylesheets;
 using System.Text.Json.Serialization;
 
-namespace OgcApi.Net.Styles.Model;
+namespace OgcApi.Net.Styles.Model.Metadata;
 
 /// <summary>
 /// Style metadata
@@ -73,7 +74,7 @@ public class OgcStyleMetadata
     /// Stylesheets
     /// </summary>
     [JsonPropertyName("stylesheets")]
-    public List<OgcStylesheet>? Stylesheets { get; set; }
+    public List<OgcStylesheetGet>? Stylesheets { get; set; }
 
     /// <summary>
     /// Data Layers
