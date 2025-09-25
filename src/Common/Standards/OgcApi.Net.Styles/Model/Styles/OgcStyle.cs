@@ -1,7 +1,7 @@
 ﻿using OgcApi.Net.Resources;
 using System.Text.Json.Serialization;
 
-namespace OgcApi.Net.Styles.Model;
+namespace OgcApi.Net.Styles.Model.Styles;
 
 /// <summary>
 /// Style

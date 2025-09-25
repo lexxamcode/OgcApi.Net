@@ -14,4 +14,9 @@ public class OgcStylesheetPost : OgcStylesheetBase
     /// A content of the stylesheet being added
     /// </summary>
     public required string Content { get; set; }
+
+    /// <summary>
+    /// A format of the stylesheet being added
+    /// </summary>
+    public required string Format { get; set; }
 }

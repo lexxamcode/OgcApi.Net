@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using OgcApi.Net.Styles.Model.Metadata;
 
 namespace OgcApi.Net.Styles.Controllers;
 
@@ -8,27 +9,61 @@ namespace OgcApi.Net.Styles.Controllers;
 [ApiController]
 [Route("api/ogc/collections")]
 [ApiExplorerSettings(GroupName = "ogc")]
-public class MetadataController : ControllerBase
+public class MetadataController(IMetadataStorage metadataStorage) : ControllerBase
 {
     [HttpGet("{collectionId}/styles/{styleId}/metadata")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult GetMetadata(string collectionId, string styleId)
+    public async Task<ActionResult<OgcStyleMetadata>> GetMetadata(string collectionId, string styleId)
     {
-        // return style metadata
-        return Ok();
+        try
+        {
+            var metadata = await metadataStorage.Get(collectionId, styleId);
+            return Ok(metadata);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
     }
 
     [HttpPut("{collectionId}/styles/{styleId}/metadata")]
-    public ActionResult ReplaceMetadata(string collectionId, string styleId)
+    [Consumes("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> ReplaceMetadata(string collectionId, string styleId, [FromBody] OgcStyleMetadata newMetadata)
     {
-        return Ok();
+        try
+        {
+            await metadataStorage.Replace(collectionId, styleId, newMetadata);
+            return Ok();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
     }
 
     [HttpPatch("{collectionId}/styles/{styleId}/metadata")]
-    public ActionResult UpdateMetadata(string collectionId, string styleId)
+    [Consumes("application/merge-patch+json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult> UpdateMetadata(string collectionId, string styleId, [FromBody] OgcStyleMetadata metadata)
     {
-        return Ok();
+        try
+        {
+            await metadataStorage.Update(collectionId, styleId, metadata);
+            return Ok();
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500);
+        }
     }
 }

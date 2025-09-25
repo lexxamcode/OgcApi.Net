@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using OgcApi.Net.Styles.Model.Styles;
+using System.Text.Json.Serialization;
 
 namespace OgcApi.Net.Styles.Model;
 
@@ -11,7 +12,7 @@ public class OgcStyles
     /// Default
     /// </summary>
     [JsonPropertyName("default")]
-    public string Default { get; set; } = "default";
+    public string? Default { get; set; }
 
     /// <summary>
     /// Styles list

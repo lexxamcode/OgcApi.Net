@@ -1,8 +1,7 @@
 ﻿using OgcApi.Net.Styles.Model;
-using OgcApi.Net.Styles.Model.Parameters;
 using OgcApi.Net.Styles.Model.Stylesheets;
 
-namespace OgcApi.Net.Styles.Storage;
+namespace OgcApi.Net.Styles.Model.Styles;
 
 /// <summary>
 /// An interface representing styles storage
@@ -40,4 +39,26 @@ public interface IStylesStorage
     /// <param name="format">Required format</param>
     /// <returns>Stylesheet object with a link to the stylesheet file</returns>
     public Task<OgcStylesheetGet> GetStylesheet(string baseResource, string styleId, string format);
+
+    /// <summary>
+    /// Updates default style for baseResource
+    /// </summary>
+    /// <param name="baseResource">Base resource identifier</param>
+    /// <param name="updateDefaultStyleRequest">Default style request</param>
+    public Task UpdateDefaultStyle(string baseResource, UpdateDefaultStyleRequest updateDefaultStyleRequest);
+
+    /// <summary>
+    /// Replaces existing stylesheet with a new stylesheet
+    /// </summary>
+    /// <param name="baseResource">Base resource identifier</param>
+    /// <param name="styleId">Style identifier</param>
+    /// <param name="stylePostParameters">Style post parameters</param>
+    public Task ReplaceStyle(string baseResource, string styleId, OgcStylesheetPost stylePostParameters);
+
+    /// <summary>
+    /// Deletes existing style
+    /// </summary>
+    /// <param name="baseResource">Base resource identifier</param>
+    /// <param name="styleId">Style identifier</param>
+    public Task DeleteStyle(string baseResource, string styleId);
 }
