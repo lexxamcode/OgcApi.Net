@@ -69,22 +69,4 @@ public class OgcStyleMetadata
     /// </summary>
     [JsonPropertyName("version")]
     public string? Version { get; set; }
-
-    /// <summary>
-    /// Stylesheets
-    /// </summary>
-    [JsonPropertyName("stylesheets")]
-    public List<OgcStylesheetGet>? Stylesheets { get; set; }
-
-    /// <summary>
-    /// Data Layers
-    /// </summary>
-    [JsonPropertyName("layers")]
-    public List<OgcLayer>? Layers { get; set; }
-
-    /// <summary>
-    /// Links
-    /// </summary>
-    [JsonPropertyName("links")]
-    public List<Link>? Links { get; set; }
 }

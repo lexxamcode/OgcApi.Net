@@ -9,7 +9,7 @@ using OgcApi.Net.Options;
 using OgcApi.Net.PostGis;
 using OgcApi.Net.Schemas;
 using OgcApi.Net.SqlServer;
-using OgcApi.Net.Styles;
+using OgcApi.Net.Styles.Extensions;
 using SampleWebApplication;
 using ServiceDefaults;
 

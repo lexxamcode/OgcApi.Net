@@ -1,7 +1,7 @@
 ﻿using OgcApi.Net.Modules;
 using OgcApi.Net.Resources;
 
-namespace OgcApi.Net.Styles;
+namespace OgcApi.Net.Styles.Extensions;
 
 public class StylesLinksExtension : ILinksExtension
 {

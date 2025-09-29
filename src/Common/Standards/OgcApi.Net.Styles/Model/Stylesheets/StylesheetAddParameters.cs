@@ -3,7 +3,7 @@
 /// <summary>
 /// A class used for adding new stylesheet to a storage
 /// </summary>
-public class OgcStylesheetPost : OgcStylesheetBase
+public class StylesheetAddParameters
 {
     /// <summary>
     /// An identifier of the new style
@@ -11,12 +11,12 @@ public class OgcStylesheetPost : OgcStylesheetBase
     public required string StyleId { get; set; }
 
     /// <summary>
+    /// A format of the stylesheet being added, e.g. mapbox, sld10
+    /// </summary>
+    public required string Format { get; set; }
+
+    /// <summary>
     /// A content of the stylesheet being added
     /// </summary>
     public required string Content { get; set; }
-
-    /// <summary>
-    /// A format of the stylesheet being added
-    /// </summary>
-    public required string Format { get; set; }
 }

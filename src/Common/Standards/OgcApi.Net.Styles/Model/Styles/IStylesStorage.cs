@@ -1,5 +1,4 @@
-﻿using OgcApi.Net.Styles.Model;
-using OgcApi.Net.Styles.Model.Stylesheets;
+﻿using OgcApi.Net.Styles.Model.Stylesheets;
 
 namespace OgcApi.Net.Styles.Model.Styles;
 
@@ -8,6 +7,31 @@ namespace OgcApi.Net.Styles.Model.Styles;
 /// </summary>
 public interface IStylesStorage
 {
+    /// <summary>
+    /// Gets stylesheet formats (mapbox, sld10, sld11) for the style
+    /// </summary>
+    /// <param name="baseResource">Base resource identifier</param>
+    /// <param name="styleId">Style identifier</param>
+    /// <returns>List of formats</returns>
+    public Task<List<string>> GetAvailableStylesheetsFormats(string baseResource, string styleId);
+
+    /// <summary>
+    /// Checks if style already exists
+    /// </summary>
+    /// <param name="baseResource">Base resource identifier</param>
+    /// <param name="styleId">Style identifier</param>
+    /// <returns>Whetehr the style exists</returns>
+    public Task<bool> StyleExists(string baseResource, string styleId);
+
+    /// <summary>
+    /// Checks if stylesheet of the style already exists
+    /// </summary>
+    /// <param name="baseResource">Base resource identifier</param>
+    /// <param name="styleId">Style identifier</param>
+    /// <param name="format">Stylesheet format e.g. "mapbox", "sld10"</param>
+    /// <returns>Whether the stylesheet exists</returns>
+    public Task<bool> StylesheetExists(string baseResource, string styleId, string format);
+
     /// <summary>
     /// Gets a list of available styles for the resource
     /// </summary>
@@ -27,9 +51,8 @@ public interface IStylesStorage
     /// Adds a new style to the styles storage
     /// </summary>
     /// <param name="baseResource">Base resource identifier</param>
-    /// <param name="stylePostParameters">Style post parameters</param>
-    /// <returns>Newly created stylesheet</returns>
-    public Task<OgcStylesheetGet> AddStyle(string baseResource, OgcStylesheetPost stylePostParameters);
+    /// <param name="parameters">Style addition parameters</param>
+    public Task AddStylesheet(string baseResource, StylesheetAddParameters parameters);
 
     /// <summary>
     /// Gets a stylesheet of the style with required format
@@ -37,15 +60,15 @@ public interface IStylesStorage
     /// <param name="baseResource">Resource identifier</param>
     /// <param name="styleId">Style identifier</param>
     /// <param name="format">Required format</param>
-    /// <returns>Stylesheet object with a link to the stylesheet file</returns>
-    public Task<OgcStylesheetGet> GetStylesheet(string baseResource, string styleId, string format);
+    /// <returns>A content of the stylesheet</returns>
+    public Task<string> GetStylesheet(string baseResource, string styleId, string format);
 
     /// <summary>
     /// Updates default style for baseResource
     /// </summary>
     /// <param name="baseResource">Base resource identifier</param>
     /// <param name="updateDefaultStyleRequest">Default style request</param>
-    public Task UpdateDefaultStyle(string baseResource, UpdateDefaultStyleRequest updateDefaultStyleRequest);
+    public Task UpdateDefaultStyle(string baseResource, DefaultStyle updateDefaultStyleRequest);
 
     /// <summary>
     /// Replaces existing stylesheet with a new stylesheet
@@ -53,7 +76,7 @@ public interface IStylesStorage
     /// <param name="baseResource">Base resource identifier</param>
     /// <param name="styleId">Style identifier</param>
     /// <param name="stylePostParameters">Style post parameters</param>
-    public Task ReplaceStyle(string baseResource, string styleId, OgcStylesheetPost stylePostParameters);
+    public Task ReplaceStyle(string baseResource, string styleId, StylesheetAddParameters stylePostParameters);
 
     /// <summary>
     /// Deletes existing style

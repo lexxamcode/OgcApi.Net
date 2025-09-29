@@ -1,7 +1,6 @@
-﻿using OgcApi.Net.Styles.Model.Styles;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace OgcApi.Net.Styles.Model;
+namespace OgcApi.Net.Styles.Model.Styles;
 
 /// <summary>
 /// Styles collection for a resource

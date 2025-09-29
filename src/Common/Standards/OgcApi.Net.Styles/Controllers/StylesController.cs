@@ -58,7 +58,7 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult> PostStyle(string collectionId, [FromBody] OgcStylesheetPost addStyleParameters)
+    public async Task<ActionResult> PostStyle(string collectionId, [FromBody] StylesheetAddParameters addStyleParameters)
     {
         try
         {
@@ -68,8 +68,8 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
         }
         catch(Exception)
         {
-            // Add new style
-            var newStylesheet = await stylesStorage.AddStyle(collectionId, addStyleParameters);
+            // Add new stylesheet
+            await stylesStorage.AddStylesheet(collectionId, addStyleParameters);
 
             // Add a metadata for the new style
             var newlyAddedStyleMetadata = new OgcStyleMetadata
@@ -77,9 +77,6 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
                 Id = addStyleParameters.StyleId,
                 Created = DateTime.UtcNow,
                 Updated = DateTime.UtcNow,
-                Stylesheets = [
-                    newStylesheet
-                ]
             };
             await metadataStorage.AddMetadata(collectionId, addStyleParameters.StyleId, newlyAddedStyleMetadata);
 
@@ -98,11 +95,11 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> UpdateDefaultStyle(string collectionId,
-        [FromBody] UpdateDefaultStyleRequest updateDefaultStyleRequest)
+        [FromBody] DefaultStyle newDefaultStyle)
     {
         try
         {
-            await stylesStorage.UpdateDefaultStyle(collectionId, updateDefaultStyleRequest);
+            await stylesStorage.UpdateDefaultStyle(collectionId, newDefaultStyle);
             return Ok();
         }
         catch(KeyNotFoundException)
@@ -120,7 +117,7 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> ReplaceStyle(string collectionId, string styleId, [FromBody] OgcStylesheetPost stylesheetPost)
+    public async Task<ActionResult> ReplaceStyle(string collectionId, string styleId, [FromBody] StylesheetAddParameters stylesheetPost)
     {
         try
         {

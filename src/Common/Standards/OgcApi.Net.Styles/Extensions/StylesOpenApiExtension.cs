@@ -2,7 +2,7 @@
 using OgcApi.Net.OpenApi.Interfaces;
 using OgcApi.Net.Options;
 
-namespace OgcApi.Net.Styles;
+namespace OgcApi.Net.Styles.Extensions;
 
 public class StylesOpenApiExtension : IOpenApiExtension
 {
