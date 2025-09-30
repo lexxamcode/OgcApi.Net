@@ -2,7 +2,7 @@
 
 public static class FormatToExtensionMapper
 {
-    private readonly static Dictionary<string, string> mappings = new() {
+    private static readonly Dictionary<string, string> mappings = new() {
         { "mapbox", "json" },
         { "sld10", "xml" },
         { "sld11", "xml" }

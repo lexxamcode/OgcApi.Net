@@ -2,7 +2,7 @@
 
 public static class FormatToContentType
 {
-    private readonly static Dictionary<string, string> mappings = new() {
+    private static readonly Dictionary<string, string> mappings = new() {
         { "mapbox", "application/vnd.mapbox.style+json" },
         { "sld10", "application/vnd.ogc.sld+xml" },
         { "sld11", "application/vnd.ogc.sld+xml" }

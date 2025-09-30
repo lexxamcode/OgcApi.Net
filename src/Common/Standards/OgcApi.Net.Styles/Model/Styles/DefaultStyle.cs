@@ -11,5 +11,6 @@ public class DefaultStyle
     /// Default style identifier
     /// </summary>
     [JsonPropertyName("default")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Default { get; set; }
 }

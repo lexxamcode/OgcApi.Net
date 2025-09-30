@@ -8,10 +8,10 @@ using System.Text.Json;
 
 namespace OgcApi.Net.Styles.Storage.FileSystem;
 
-public class StyleFileSystemStorage(IOptions<FileSystemStorageOptions> options,
+public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> options,
     IHttpContextAccessor httpContextAccessor) : IStylesStorage
 {
-    private readonly FileSystemStorageOptions _options = options.Value;
+    private readonly StyleFileSystemStorageOptions _options = options.Value;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public Task<bool> StyleExists(string baseResource, string styleId)
@@ -25,7 +25,7 @@ public class StyleFileSystemStorage(IOptions<FileSystemStorageOptions> options,
         var stylesheetExtension = FormatToExtensionMapper.GetFileExtensionForFormat(format);
         var stylesheetName = $"{_options.StylesheetFilename}.{format}.{stylesheetExtension}";
         var stylesheetPath = Path.Combine(options.Value.BaseDirectory, baseResource, styleId, stylesheetName);
-        
+
         return Task.FromResult(File.Exists(stylesheetPath));
     }
 
@@ -33,7 +33,7 @@ public class StyleFileSystemStorage(IOptions<FileSystemStorageOptions> options,
     {
         var stylesheetsPath = Path.Combine(_options.BaseDirectory, baseResource, styleId);
         var stylesheets = Directory.GetFiles(stylesheetsPath);
-        var availableFormats = stylesheets.Select(stylesheet => 
+        var availableFormats = stylesheets.Select(stylesheet =>
             Path.GetFileName(stylesheet)
             .Split(".")
             .Skip(1)
@@ -87,7 +87,6 @@ public class StyleFileSystemStorage(IOptions<FileSystemStorageOptions> options,
             Title = metadata.Title,
             Links = links
         };
-
     }
 
     public async Task<OgcStyles> GetStyles(string baseResource)

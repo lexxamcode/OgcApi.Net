@@ -411,5 +411,11 @@
         }
       }
     ]
+  },
+  "StyleFileSystemStorageOptions": {
+    "BaseDirectory": "styles",
+    "DefaultStyleFilename": "default.json",
+    "StylesheetFilename": "style",
+    "MetadataFilename": "metadata.json"
   }
 }

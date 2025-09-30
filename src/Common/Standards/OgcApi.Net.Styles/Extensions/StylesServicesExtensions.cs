@@ -14,10 +14,10 @@ public static class StylesServicesExtensions
         services.AddSingleton<ILinksExtension, StylesLinksExtension>();
         return services;
     }
-    
+
     public static IServiceCollection AddStylesFileSystemStorage(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<FileSystemStorageOptions>(configuration.GetSection("FileSystemStorageOptions"));
+        services.Configure<StyleFileSystemStorageOptions>(configuration.GetSection(nameof(StyleFileSystemStorageOptions)));
         services.AddSingleton<IStylesStorage, StyleFileSystemStorage>();
         services.AddSingleton<IMetadataStorage, StyleMetadataFileSystemStorage>();
 

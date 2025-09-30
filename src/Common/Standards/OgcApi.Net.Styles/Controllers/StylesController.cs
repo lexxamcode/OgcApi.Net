@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using OgcApi.Net.Styles.Model;
 using OgcApi.Net.Styles.Model.Metadata;
 using OgcApi.Net.Styles.Model.Styles;
 using OgcApi.Net.Styles.Model.Stylesheets;
@@ -66,7 +65,7 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
                 addStyleParameters.StyleId, addStyleParameters.Format);
             return Conflict();
         }
-        catch(Exception)
+        catch (Exception)
         {
             // Add new stylesheet
             await stylesStorage.AddStylesheet(collectionId, addStyleParameters);
@@ -102,11 +101,11 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
             await stylesStorage.UpdateDefaultStyle(collectionId, newDefaultStyle);
             return Ok();
         }
-        catch(KeyNotFoundException)
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-        catch(Exception)
+        catch (Exception)
         {
             return StatusCode(500);
         }
@@ -124,11 +123,11 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
             await stylesStorage.ReplaceStyle(collectionId, styleId, stylesheetPost);
             return Ok();
         }
-        catch(KeyNotFoundException)
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-        catch(Exception)
+        catch (Exception)
         {
             return StatusCode(500);
         }
@@ -145,11 +144,11 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
             await stylesStorage.DeleteStyle(collectionId, styleId);
             return Ok();
         }
-        catch(KeyNotFoundException)
+        catch (KeyNotFoundException)
         {
             return NotFound();
         }
-        catch(Exception)
+        catch (Exception)
         {
             return StatusCode(500);
         }

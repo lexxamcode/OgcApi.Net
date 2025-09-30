@@ -1,6 +1,6 @@
 ﻿namespace OgcApi.Net.Styles.Storage.FileSystem;
 
-public class FileSystemStorageOptions
+public class StyleFileSystemStorageOptions
 {
     public required string BaseDirectory { get; set; }
     public required string DefaultStyleFilename { get; set; }
