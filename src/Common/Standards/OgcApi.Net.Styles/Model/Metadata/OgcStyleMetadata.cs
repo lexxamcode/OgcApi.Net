@@ -8,7 +8,7 @@ namespace OgcApi.Net.Styles.Model.Metadata;
 public class OgcStyleMetadata
 {
     /// <summary>
-    /// Style Identifier
+    /// Style identifier
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }

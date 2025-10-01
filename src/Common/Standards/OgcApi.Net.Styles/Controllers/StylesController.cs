@@ -11,18 +11,22 @@ namespace OgcApi.Net.Styles.Controllers;
 [ApiController]
 [Route("api/ogc/collections")]
 [ApiExplorerSettings(GroupName = "ogc")]
-public class StylesController(IStylesStorage stylesStorage, IMetadataStorage metadataStorage) : ControllerBase
+public class StylesController(IStyleStorage stylesStorage, IMetadataStorage metadataStorage) : ControllerBase
 {
     [HttpGet("{collectionId}/styles")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<OgcStyles>> GetStyles(string collectionId)
     {
         try
         {
             var styles = await stylesStorage.GetStyles(collectionId);
             return Ok(styles);
+        }
+        catch (KeyNotFoundException)
+        {
+            return new OgcStyles();
         }
         catch (Exception)
         {
@@ -116,11 +120,11 @@ public class StylesController(IStylesStorage stylesStorage, IMetadataStorage met
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> ReplaceStyle(string collectionId, string styleId, [FromBody] StylesheetAddParameters stylesheetPost)
+    public async Task<ActionResult> ReplaceStyle(string collectionId, string styleId, [FromBody] StylesheetAddParameters newStylesheet)
     {
         try
         {
-            await stylesStorage.ReplaceStyle(collectionId, styleId, stylesheetPost);
+            await stylesStorage.ReplaceStyle(collectionId, styleId, newStylesheet);
             return Ok();
         }
         catch (KeyNotFoundException)

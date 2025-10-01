@@ -8,7 +8,7 @@ namespace OgcApi.Net.Styles.Model.Styles;
 public class OgcStyles
 {
     /// <summary>
-    /// Default
+    /// Default style identifier
     /// </summary>
     [JsonPropertyName("default")]
     public string? Default { get; set; }

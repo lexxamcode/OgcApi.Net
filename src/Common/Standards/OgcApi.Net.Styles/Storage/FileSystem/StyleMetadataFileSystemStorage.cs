@@ -10,15 +10,21 @@ public class StyleMetadataFileSystemStorage(IOptions<StyleFileSystemStorageOptio
 
     public async Task AddMetadata(string baseResource, string styleId, OgcStyleMetadata metadata)
     {
-        var metadataPath = Path.Combine(_options.BaseDirectory, baseResource, styleId, _options.MetadataFilename);
+        var metadataPath = Path.Combine(_options.BaseDirectory, baseResource, styleId);
+        if (!Directory.Exists(metadataPath))
+            Directory.CreateDirectory(metadataPath);
+
         var metadataContent = JsonSerializer.Serialize(metadata);
-        await File.WriteAllTextAsync(metadataPath, metadataContent);
+        await File.WriteAllTextAsync(Path.Combine(metadataPath, _options.MetadataFilename), metadataContent);
     }
 
     public async Task<OgcStyleMetadata> Get(string baseResource, string styleId)
     {
-        var metadataPath = Path.Combine(_options.BaseDirectory, baseResource, styleId, _options.MetadataFilename);
-        var metadataContent = await File.ReadAllTextAsync(metadataPath);
+        var metadataPath = Path.Combine(_options.BaseDirectory, baseResource, styleId);
+        if (!Directory.Exists(metadataPath))
+            throw new KeyNotFoundException("Style not found");
+
+        var metadataContent = await File.ReadAllTextAsync(Path.Combine(metadataPath, _options.MetadataFilename));
 
         var metadata = JsonSerializer.Deserialize<OgcStyleMetadata>(metadataContent) ??
             throw new Exception("Failed to deserialize style metadata");

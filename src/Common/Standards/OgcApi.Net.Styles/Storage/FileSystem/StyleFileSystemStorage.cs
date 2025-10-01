@@ -8,15 +8,15 @@ using System.Text.Json;
 
 namespace OgcApi.Net.Styles.Storage.FileSystem;
 
-public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> options,
-    IHttpContextAccessor httpContextAccessor) : IStylesStorage
+public class StyleFileSystemStorage(IOptionsMonitor<StyleFileSystemStorageOptions> options,
+    IHttpContextAccessor httpContextAccessor) : IStyleStorage
 {
-    private readonly StyleFileSystemStorageOptions _options = options.Value;
+    private readonly StyleFileSystemStorageOptions _options = options.CurrentValue;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
 
     public Task<bool> StyleExists(string baseResource, string styleId)
     {
-        var styleDirectory = Path.Combine(options.Value.BaseDirectory, baseResource, styleId);
+        var styleDirectory = Path.Combine(_options.BaseDirectory, baseResource, styleId);
         return Task.FromResult(Directory.Exists(styleDirectory));
     }
 
@@ -24,7 +24,7 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
     {
         var stylesheetExtension = FormatToExtensionMapper.GetFileExtensionForFormat(format);
         var stylesheetName = $"{_options.StylesheetFilename}.{format}.{stylesheetExtension}";
-        var stylesheetPath = Path.Combine(options.Value.BaseDirectory, baseResource, styleId, stylesheetName);
+        var stylesheetPath = Path.Combine(_options.BaseDirectory, baseResource, styleId, stylesheetName);
 
         return Task.FromResult(File.Exists(stylesheetPath));
     }
@@ -32,8 +32,15 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
     public Task<List<string>> GetAvailableStylesheetsFormats(string baseResource, string styleId)
     {
         var stylesheetsPath = Path.Combine(_options.BaseDirectory, baseResource, styleId);
+
+        if (!Directory.Exists(stylesheetsPath))
+            return Task.FromResult(new List<string>());
+
         var stylesheets = Directory.GetFiles(stylesheetsPath);
-        var availableFormats = stylesheets.Select(stylesheet =>
+        var availableFormats = stylesheets
+            .Select(stylesheet => Path.GetFileName(stylesheet))
+            .Where(stylesheet => stylesheet != _options.DefaultStyleFilename && stylesheet != _options.MetadataFilename)
+            .Select(stylesheet =>
             Path.GetFileName(stylesheet)
             .Split(".")
             .Skip(1)
@@ -47,21 +54,30 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
     {
         var stylesheetExtension = FormatToExtensionMapper.GetFileExtensionForFormat(parameters.Format);
         var stylesheetName = $"{_options.StylesheetFilename}.{parameters.Format}.{stylesheetExtension}";
-        var savePath = Path.Combine(options.Value.BaseDirectory, baseResource, parameters.StyleId, stylesheetName);
+        var savePath = Path.Combine(_options.BaseDirectory, baseResource, parameters.StyleId);
+        if (!Directory.Exists(savePath))
+            Directory.CreateDirectory(savePath);
 
-        await File.WriteAllTextAsync(savePath, parameters.Content);
+        await File.WriteAllTextAsync(Path.Combine(savePath, stylesheetName), parameters.Content);
     }
 
     public Task DeleteStyle(string baseResource, string styleId)
     {
-        var stylePath = Path.Combine(options.Value.BaseDirectory, baseResource, styleId);
-        Directory.Delete(stylePath);
+        var stylePath = Path.Combine(_options.BaseDirectory, baseResource, styleId);
+
+        if (!Directory.Exists(stylePath))
+            return Task.CompletedTask;
+
+        Directory.Delete(stylePath, true);
         return Task.CompletedTask;
     }
 
     public async Task<OgcStyle> GetStyle(string baseResource, string styleId)
     {
         var metadataPath = Path.Combine(_options.BaseDirectory, baseResource, styleId, _options.MetadataFilename);
+        if (!File.Exists(metadataPath))
+            throw new KeyNotFoundException("Style metadata not found");
+
         var metadataContent = await File.ReadAllTextAsync(metadataPath);
         var metadata = JsonSerializer.Deserialize<OgcStyleMetadata>(metadataContent) ??
             throw new Exception("Style metadata does not exist");
@@ -74,7 +90,7 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
             {
                 Href = new Uri(
                     Utils.GetBaseUrl(_httpContextAccessor.HttpContext?.Request),
-                    $"collections/{baseResource}/style/{styleId}?f={format}"),
+                    $"collections/{baseResource}/styles/{styleId}?f={format}"),
                 Rel = "stylesheet",
                 Type = FormatToContentType.GetContentTypeForFormat(format)
             };
@@ -93,6 +109,9 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
     {
         var baseResourcePath = Path.Combine(_options.BaseDirectory, baseResource);
 
+        if (!Directory.Exists(baseResourcePath))
+            throw new KeyNotFoundException($"Styles for {baseResource} not found");
+
         var styles = new OgcStyles();
         var stylesDirectories = Directory.GetDirectories(baseResourcePath);
         foreach (var styleDirectory in stylesDirectories)
@@ -103,8 +122,19 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
         }
 
         var defaultStyleFilePath = Path.Combine(_options.BaseDirectory, baseResource, _options.DefaultStyleFilename);
-        var defaultStyleFileContent = await File.ReadAllTextAsync(defaultStyleFilePath);
-        var defaultStyle = JsonSerializer.Deserialize<DefaultStyle>(defaultStyleFileContent);
+        DefaultStyle? defaultStyle;
+        if (!File.Exists(defaultStyleFilePath))
+        {
+            defaultStyle = new DefaultStyle
+            {
+                Default = styles.Styles.FirstOrDefault()?.Id
+            };
+        }
+        else
+        {
+            var defaultStyleFileContent = await File.ReadAllTextAsync(defaultStyleFilePath);
+            defaultStyle = JsonSerializer.Deserialize<DefaultStyle>(defaultStyleFileContent);
+        }
 
         styles.Default = defaultStyle?.Default;
         return styles;
@@ -115,6 +145,8 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
         var stylesheetExtension = FormatToExtensionMapper.GetFileExtensionForFormat(format);
         var stylesheetFilename = $"{_options.StylesheetFilename}.{format}.{stylesheetExtension}";
         var stylesheetPath = Path.Combine(_options.BaseDirectory, baseResource, styleId, stylesheetFilename);
+        if (!File.Exists(stylesheetPath))
+            throw new KeyNotFoundException("Stylesheet not found");
 
         var content = await File.ReadAllTextAsync(stylesheetPath);
         return content;
@@ -124,15 +156,20 @@ public class StyleFileSystemStorage(IOptions<StyleFileSystemStorageOptions> opti
     {
         var stylesheetExtension = FormatToExtensionMapper.GetFileExtensionForFormat(stylePostParameters.Format);
         var stylesheetName = $"{_options.StylesheetFilename}.{stylePostParameters.Format}.{stylesheetExtension}";
-        var path = Path.Combine(options.Value.BaseDirectory, baseResource, stylePostParameters.StyleId, stylesheetName);
+        var path = Path.Combine(_options.BaseDirectory, baseResource, stylePostParameters.StyleId, stylesheetName);
+        if (!File.Exists(path))
+            throw new KeyNotFoundException("Stylesheet not found");
 
         await File.WriteAllTextAsync(path, stylePostParameters.Content);
     }
 
     public async Task UpdateDefaultStyle(string baseResource, DefaultStyle updateDefaultStyleRequest)
     {
-        var defaultStyleFilePath = Path.Combine(_options.BaseDirectory, baseResource, _options.DefaultStyleFilename);
+        var defaultStyleFilePath = Path.Combine(_options.BaseDirectory, baseResource);
+        if (!Directory.Exists(defaultStyleFilePath))
+            Directory.CreateDirectory(defaultStyleFilePath);
+
         var defaultStyleFileContent = JsonSerializer.Serialize(updateDefaultStyleRequest);
-        await File.WriteAllTextAsync(defaultStyleFilePath, defaultStyleFileContent);
+        await File.WriteAllTextAsync(Path.Combine(defaultStyleFilePath, _options.DefaultStyleFilename), defaultStyleFileContent);
     }
 }

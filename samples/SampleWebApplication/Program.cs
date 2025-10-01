@@ -22,7 +22,8 @@ builder.Services.AddOgcApiPostGisProvider();
 builder.Services.AddOgcApiMbTilesProvider();
 builder.Services.AddSchemasOpenApiExtension();
 
-builder.Services.AddOgcApiStylesLinks();
+builder.Services.AddOgcApiStyles();
+builder.Services.AddStylesFileSystemStorage(builder.Configuration);
 
 // If the connection string is configured in the ogcapi.json file
 // builder.Services.AddOgcApi("ogcapi.json", TileAccess.TilesAccessDelegate, TileAccess.FeatureAccessDelegate);

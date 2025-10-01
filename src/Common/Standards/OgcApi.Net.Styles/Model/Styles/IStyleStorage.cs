@@ -5,7 +5,7 @@ namespace OgcApi.Net.Styles.Model.Styles;
 /// <summary>
 /// An interface representing styles storage
 /// </summary>
-public interface IStylesStorage
+public interface IStyleStorage
 {
     /// <summary>
     /// Gets stylesheet formats (mapbox, sld10, sld11) for the style
