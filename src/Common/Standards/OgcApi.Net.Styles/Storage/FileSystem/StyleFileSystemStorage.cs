@@ -41,11 +41,11 @@ public class StyleFileSystemStorage(IOptionsMonitor<StyleFileSystemStorageOption
             .Select(stylesheet => Path.GetFileName(stylesheet))
             .Where(stylesheet => stylesheet != _options.DefaultStyleFilename && stylesheet != _options.MetadataFilename)
             .Select(stylesheet =>
-            Path.GetFileName(stylesheet)
-            .Split(".")
-            .Skip(1)
-            .First())
-        .ToList();
+                stylesheet
+                .Split(".")
+                .Skip(1)
+                .First())
+            .ToList();
 
         return Task.FromResult(availableFormats);
     }
