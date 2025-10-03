@@ -56,6 +56,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceDefaults", "samples\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgcApi.Net.Styles", "src\Common\Standards\OgcApi.Net.Styles\OgcApi.Net.Styles.csproj", "{ABDADE6E-43A3-4870-9FC4-CA5D8A8A5EFC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OgcApi.Net.Styles.Tests", "tests\OgcApi.Net.Styles.Tests\OgcApi.Net.Styles.Tests.csproj", "{06A1D7CC-1ED2-40DF-9A53-7CCF85253997}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -126,6 +128,10 @@ Global
 		{ABDADE6E-43A3-4870-9FC4-CA5D8A8A5EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABDADE6E-43A3-4870-9FC4-CA5D8A8A5EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABDADE6E-43A3-4870-9FC4-CA5D8A8A5EFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06A1D7CC-1ED2-40DF-9A53-7CCF85253997}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06A1D7CC-1ED2-40DF-9A53-7CCF85253997}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06A1D7CC-1ED2-40DF-9A53-7CCF85253997}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06A1D7CC-1ED2-40DF-9A53-7CCF85253997}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -150,6 +156,7 @@ Global
 		{A392639A-184E-4DDC-AB26-5315F20976F2} = {BF7D6BFB-A511-417D-9C0C-4707DF1E7D4F}
 		{F284106B-2721-4A87-8DF1-CFA7A7A9EB27} = {BF7D6BFB-A511-417D-9C0C-4707DF1E7D4F}
 		{ABDADE6E-43A3-4870-9FC4-CA5D8A8A5EFC} = {B29E1B67-540F-4C13-8618-1D96A1EA10AE}
+		{06A1D7CC-1ED2-40DF-9A53-7CCF85253997} = {3BB5EAB4-3F1E-4911-95A8-CCE8EA48FAC9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {08E94841-4EB6-46AC-A9E2-F2D6AF5C249B}
