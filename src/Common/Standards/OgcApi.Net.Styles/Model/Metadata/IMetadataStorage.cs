@@ -11,7 +11,7 @@ public interface IMetadataStorage
     /// <param name="baseResource">Base resource identifier</param>
     /// <param name="styleId">Style identifier</param>
     /// <param name="metadata">Metadata</param>
-    public Task AddMetadata(string baseResource, string styleId, OgcStyleMetadata metadata);
+    public Task Add(string baseResource, string styleId, OgcStyleMetadata metadata);
 
     /// <summary>
     /// Returns metadata of the style

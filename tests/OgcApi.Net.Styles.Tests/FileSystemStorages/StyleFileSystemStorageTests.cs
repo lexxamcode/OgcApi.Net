@@ -69,7 +69,7 @@ public class StyleFileSystemStorageTests : IDisposable
         const string styleId = FileSystemFixture.ExistingStyleId;
         const string expectedFormat = "mapbox";
 
-        var availableFormats = await _styleFileSystemStorage.GetAvailableStylesheetsFormats(collectionId, styleId);
+        var availableFormats = await _styleFileSystemStorage.GetAvailableFormats(collectionId, styleId);
 
         Assert.NotNull(availableFormats);
         Assert.Single(availableFormats);
@@ -117,7 +117,7 @@ public class StyleFileSystemStorageTests : IDisposable
             Content = newStyleContent
         };
         await _styleFileSystemStorage.AddStylesheet(collectionId, addParameters);
-        var availableFormats = await _styleFileSystemStorage.GetAvailableStylesheetsFormats(collectionId, styleId);
+        var availableFormats = await _styleFileSystemStorage.GetAvailableFormats(collectionId, styleId);
 
         var path = Path.Combine(_options.BaseDirectory, collectionId, styleId, expectectedNewStylesheetName);
         var stylesheetExists = File.Exists(path);

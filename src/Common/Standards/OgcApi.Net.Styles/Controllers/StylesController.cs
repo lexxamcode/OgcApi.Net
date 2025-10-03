@@ -81,7 +81,7 @@ public class StylesController(IStyleStorage stylesStorage, IMetadataStorage meta
                 Created = DateTime.UtcNow,
                 Updated = DateTime.UtcNow,
             };
-            await metadataStorage.AddMetadata(collectionId, addStyleParameters.StyleId, newlyAddedStyleMetadata);
+            await metadataStorage.Add(collectionId, addStyleParameters.StyleId, newlyAddedStyleMetadata);
 
             // Return 201 Created
             return CreatedAtAction(

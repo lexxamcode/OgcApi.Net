@@ -13,7 +13,7 @@ public interface IStyleStorage
     /// <param name="baseResource">Base resource identifier</param>
     /// <param name="styleId">Style identifier</param>
     /// <returns>List of formats</returns>
-    public Task<List<string>> GetAvailableStylesheetsFormats(string baseResource, string styleId);
+    public Task<List<string>> GetAvailableFormats(string baseResource, string styleId);
 
     /// <summary>
     /// Checks if style already exists

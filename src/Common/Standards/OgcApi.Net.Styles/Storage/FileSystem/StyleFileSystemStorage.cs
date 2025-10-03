@@ -29,7 +29,7 @@ public class StyleFileSystemStorage(IOptionsMonitor<StyleFileSystemStorageOption
         return Task.FromResult(File.Exists(stylesheetPath));
     }
 
-    public Task<List<string>> GetAvailableStylesheetsFormats(string baseResource, string styleId)
+    public Task<List<string>> GetAvailableFormats(string baseResource, string styleId)
     {
         var stylesheetsPath = Path.Combine(_options.BaseDirectory, baseResource, styleId);
 
@@ -83,7 +83,7 @@ public class StyleFileSystemStorage(IOptionsMonitor<StyleFileSystemStorageOption
             throw new Exception("Style metadata does not exist");
 
         var links = new List<Link>();
-        var availableFormats = await GetAvailableStylesheetsFormats(baseResource, styleId);
+        var availableFormats = await GetAvailableFormats(baseResource, styleId);
         foreach (var format in availableFormats)
         {
             var link = new Link

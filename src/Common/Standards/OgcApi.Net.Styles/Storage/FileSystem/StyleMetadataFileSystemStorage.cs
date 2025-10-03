@@ -4,11 +4,11 @@ using System.Text.Json;
 
 namespace OgcApi.Net.Styles.Storage.FileSystem;
 
-public class StyleMetadataFileSystemStorage(IOptions<StyleFileSystemStorageOptions> options) : IMetadataStorage
+public class StyleMetadataFileSystemStorage(IOptionsMonitor<StyleFileSystemStorageOptions> options) : IMetadataStorage
 {
-    private readonly StyleFileSystemStorageOptions _options = options.Value;
+    private readonly StyleFileSystemStorageOptions _options = options.CurrentValue;
 
-    public async Task AddMetadata(string baseResource, string styleId, OgcStyleMetadata metadata)
+    public async Task Add(string baseResource, string styleId, OgcStyleMetadata metadata)
     {
         var metadataPath = Path.Combine(_options.BaseDirectory, baseResource, styleId);
         if (!Directory.Exists(metadataPath))
@@ -34,12 +34,12 @@ public class StyleMetadataFileSystemStorage(IOptions<StyleFileSystemStorageOptio
     public Task Replace(string baseResource, string styleId, OgcStyleMetadata newMetadata)
     {
         // In case of filesystem storage just override existing metadata file
-        return AddMetadata(baseResource, styleId, newMetadata);
+        return Add(baseResource, styleId, newMetadata);
     }
 
     public Task Update(string baseResource, string styleId, OgcStyleMetadata updatedMetadata)
     {
         // In case of filesystem storage just override existing metadata file
-        return AddMetadata(baseResource, styleId, updatedMetadata);
+        return Add(baseResource, styleId, updatedMetadata);
     }
 }
