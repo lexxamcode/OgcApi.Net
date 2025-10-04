@@ -9,11 +9,11 @@ namespace OgcApi.Net.Styles.Controllers;
 
 [EnableCors("OgcApi")]
 [ApiController]
-[Route("api/ogc/collections")]
+[Route("api/ogc/collections/{collectionId}/styles")]
 [ApiExplorerSettings(GroupName = "ogc")]
 public class StylesController(IStyleStorage stylesStorage, IMetadataStorage metadataStorage) : ControllerBase
 {
-    [HttpGet("{collectionId}/styles")]
+    [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -34,7 +34,7 @@ public class StylesController(IStyleStorage stylesStorage, IMetadataStorage meta
         }
     }
 
-    [HttpGet("{collectionId}/styles/{styleId}")]
+    [HttpGet("{styleId}")]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -57,7 +57,7 @@ public class StylesController(IStyleStorage stylesStorage, IMetadataStorage meta
         }
     }
 
-    [HttpPost("{collectionId}/styles")]
+    [HttpPost]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -92,7 +92,7 @@ public class StylesController(IStyleStorage stylesStorage, IMetadataStorage meta
         }
     }
 
-    [HttpPatch("{collectionId}/styles")]
+    [HttpPatch]
     [Consumes("application/merge-patch+json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -115,7 +115,7 @@ public class StylesController(IStyleStorage stylesStorage, IMetadataStorage meta
         }
     }
 
-    [HttpPut("{collectionId}/styles/{styleId}")]
+    [HttpPut("{styleId}")]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -137,7 +137,7 @@ public class StylesController(IStyleStorage stylesStorage, IMetadataStorage meta
         }
     }
 
-    [HttpDelete("{collectionId}/styles/{styleId}")]
+    [HttpDelete("{styleId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

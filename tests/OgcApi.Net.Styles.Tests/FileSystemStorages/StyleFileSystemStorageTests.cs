@@ -5,7 +5,7 @@ using OgcApi.Net.Styles.Tests.Mocks;
 
 namespace OgcApi.Net.Styles.Tests.FileSystemStorages;
 
-public class StyleFileSystemStorageTests : IDisposable
+public sealed class StyleFileSystemStorageTests : IDisposable
 {
     private readonly StyleFileSystemStorageOptions _options;
     private readonly StyleFileSystemStorage _styleFileSystemStorage;
@@ -83,7 +83,7 @@ public class StyleFileSystemStorageTests : IDisposable
         const string newStyleId = "newStyle";
         const string newStyleFormat = "sld10";
         const string newStyleContent = "completelyNewStyleContent";
-        const string expectectedNewStylesheetName = "style.sld10.xml";
+        const string expectedNewStylesheetName = "style.sld10.xml";
 
         var addParameters = new StylesheetAddParameters
         {
@@ -93,9 +93,9 @@ public class StyleFileSystemStorageTests : IDisposable
         };
         await _styleFileSystemStorage.AddStylesheet(collectionId, addParameters);
 
-        var path = Path.Combine(_options.BaseDirectory, collectionId, newStyleId, expectectedNewStylesheetName);
+        var path = Path.Combine(_options.BaseDirectory, collectionId, newStyleId, expectedNewStylesheetName);
         var stylesheetExists = File.Exists(path);
-        var content = File.ReadAllText(path);
+        var content = await File.ReadAllTextAsync(path);
 
         Assert.True(stylesheetExists);
         Assert.Equal(newStyleContent, content);
@@ -108,7 +108,7 @@ public class StyleFileSystemStorageTests : IDisposable
         const string styleId = FileSystemFixture.ExistingStyleId;
         const string newStyleFormat = "sld10";
         const string newStyleContent = "NewStylesheetContent";
-        const string expectectedNewStylesheetName = "style.sld10.xml";
+        const string expectedNewStylesheetName = "style.sld10.xml";
 
         var addParameters = new StylesheetAddParameters
         {
@@ -119,9 +119,9 @@ public class StyleFileSystemStorageTests : IDisposable
         await _styleFileSystemStorage.AddStylesheet(collectionId, addParameters);
         var availableFormats = await _styleFileSystemStorage.GetAvailableFormats(collectionId, styleId);
 
-        var path = Path.Combine(_options.BaseDirectory, collectionId, styleId, expectectedNewStylesheetName);
+        var path = Path.Combine(_options.BaseDirectory, collectionId, styleId, expectedNewStylesheetName);
         var stylesheetExists = File.Exists(path);
-        var content = File.ReadAllText(path);
+        var content = await File.ReadAllTextAsync(path);
 
         Assert.True(stylesheetExists);
         Assert.Equal(newStyleContent, content);
@@ -198,7 +198,7 @@ public class StyleFileSystemStorageTests : IDisposable
         await _styleFileSystemStorage.ReplaceStyle(collectionId, styleId, addStyleParameters);
 
         var stylePath = Path.Combine(_options.BaseDirectory, collectionId, styleId, "style.mapbox.json");
-        var newContent = File.ReadAllText(stylePath);
+        var newContent = await File.ReadAllTextAsync(stylePath);
         Assert.Equal(expectedContent, newContent);
     }
 
@@ -223,15 +223,7 @@ public class StyleFileSystemStorageTests : IDisposable
 
     public void Dispose()
     {
-        Dispose(true);
+        Directory.Delete(_options.BaseDirectory, true);
         GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (disposing)
-        {
-            Directory.Delete(_options.BaseDirectory, true);
-        }
     }
 }

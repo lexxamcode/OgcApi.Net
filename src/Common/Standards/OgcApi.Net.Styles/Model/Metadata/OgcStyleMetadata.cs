@@ -16,7 +16,6 @@ public class OgcStyleMetadata
     /// <summary>
     /// Title
     /// </summary>
-    /// <remarks>
     [JsonPropertyName("title")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Title { get; set; }

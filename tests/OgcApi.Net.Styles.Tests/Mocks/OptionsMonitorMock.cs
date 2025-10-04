@@ -17,7 +17,7 @@ public static class OptionsMonitorMock
                 MetadataFilename = "metadata.json",
                 DefaultStyleFilename = "default.json",
             };
-            var monitor = Mock.Of<IOptionsMonitor<StyleFileSystemStorageOptions>>(_ => _.CurrentValue == options);
+            var monitor = Mock.Of<IOptionsMonitor<StyleFileSystemStorageOptions>>(monitor => monitor.CurrentValue == options);
             return monitor;
         }
     }

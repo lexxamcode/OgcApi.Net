@@ -11,7 +11,7 @@ public static class FileSystemFixture
 
     public static void CreateInitialStyle(StyleFileSystemStorageOptions options)
     {
-        var testStyleContent = "style content";
+        const string testStyleContent = "style content";
         var testStylePath = Path.Combine(options.BaseDirectory, CollectionId, ExistingStyleId);
 
         // Create style

@@ -23,7 +23,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                     Type = "string",
                     Description = "Style title"
                 },
-                ["links"] = new()
+                ["links"] = new OpenApiSchema
                 {
                     Type = "array",
                     Items = new OpenApiSchema
@@ -212,7 +212,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         {
                             Content = new Dictionary<string, OpenApiMediaType>
                             {
-                                ["application/json"] = new OpenApiMediaType
+                                ["application/json"] = new()
                                 {
                                     Schema = new OpenApiSchema
                                     {
@@ -248,7 +248,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         {
                             Content = new Dictionary<string, OpenApiMediaType>
                             {
-                                ["application/merge-patch+json"] = new OpenApiMediaType
+                                ["application/merge-patch+json"] = new()
                                 {
                                     Schema = new OpenApiSchema
                                     {
@@ -285,7 +285,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         Summary = "Gets a style by its identifier",
                         Description = "Returns style info or a stylesheet if format provided",
                         Parameters = [
-                            new()
+                            new OpenApiParameter
                             {
                                 Name = "styleId",
                                 Description = "Style identifier",
@@ -296,7 +296,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                                     Type = "string",
                                 }
                             },
-                            new()
+                            new OpenApiParameter
                             {
                                 Name = "f",
                                 Description = "Stylesheet format (e.g. mapbox, sld10, sld11)",
@@ -345,7 +345,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         {
                             Content = new Dictionary<string, OpenApiMediaType>
                             {
-                                ["application/json"] = new OpenApiMediaType
+                                ["application/json"] = new()
                                 {
                                     Schema = new OpenApiSchema
                                     {
@@ -378,7 +378,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         ],
                         Summary = "Deletes existing style",
                         Parameters = [
-                            new()
+                            new OpenApiParameter
                             {
                                 Name = "styleId",
                                 Description = "Style identifier",
@@ -422,7 +422,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         Summary = "Gets a metadata of the style",
                         Description = "Gets a metadata of the style",
                         Parameters = [
-                            new()
+                            new OpenApiParameter
                             {
                                 Name = "styleId",
                                 Description = "Style identifier",
@@ -464,7 +464,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         ],
                         Summary = "Replaces existing metadata of the style with new metadata instance",
                         Parameters = [
-                            new()
+                            new OpenApiParameter
                             {
                                 Name = "styleId",
                                 Description = "Style identifier",
@@ -480,7 +480,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         {
                             Content = new Dictionary<string, OpenApiMediaType>
                             {
-                                ["application/json"] = new OpenApiMediaType
+                                ["application/json"] = new()
                                 {
                                     Schema = new OpenApiSchema
                                     {
@@ -509,7 +509,7 @@ public class StylesOpenApiExtension : IOpenApiExtension
                         ],
                         Summary = "Updates existing metadata",
                         Parameters = [
-                            new()
+                            new OpenApiParameter
                             {
                                 Name = "styleId",
                                 Description = "Style identifier",

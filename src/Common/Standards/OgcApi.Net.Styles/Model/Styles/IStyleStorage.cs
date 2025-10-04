@@ -20,7 +20,7 @@ public interface IStyleStorage
     /// </summary>
     /// <param name="baseResource">Base resource identifier</param>
     /// <param name="styleId">Style identifier</param>
-    /// <returns>Whetehr the style exists</returns>
+    /// <returns>Whether the style exists</returns>
     public Task<bool> StyleExists(string baseResource, string styleId);
 
     /// <summary>

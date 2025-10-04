@@ -9,6 +9,7 @@ public class StyleMetadataFileSystemStorageTests
 {
     private readonly StyleMetadataFileSystemStorage _metadataStorage;
     private readonly StyleFileSystemStorageOptions _options;
+
     public StyleMetadataFileSystemStorageTests()
     {
         var optionsMonitor = OptionsMonitorMock.Instance;
@@ -41,7 +42,7 @@ public class StyleMetadataFileSystemStorageTests
         Assert.True(File.Exists(metadataPath));
 
         var metadataContentBeforeAdd = JsonSerializer.Serialize(metadata);
-        var metadataContentAfterAdd = File.ReadAllText(metadataPath);
+        var metadataContentAfterAdd = await File.ReadAllTextAsync(metadataPath);
         Assert.Equal(metadataContentBeforeAdd, metadataContentAfterAdd);
     }
 

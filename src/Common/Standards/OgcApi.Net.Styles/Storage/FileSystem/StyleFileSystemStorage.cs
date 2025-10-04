@@ -82,20 +82,15 @@ public class StyleFileSystemStorage(IOptionsMonitor<StyleFileSystemStorageOption
         var metadata = JsonSerializer.Deserialize<OgcStyleMetadata>(metadataContent) ??
             throw new Exception("Style metadata does not exist");
 
-        var links = new List<Link>();
         var availableFormats = await GetAvailableFormats(baseResource, styleId);
-        foreach (var format in availableFormats)
-        {
-            var link = new Link
+        var links = availableFormats
+            .Select(format => new Link
             {
-                Href = new Uri(
-                    Utils.GetBaseUrl(_httpContextAccessor.HttpContext?.Request),
-                    $"collections/{baseResource}/styles/{styleId}?f={format}"),
+                Href = new Uri(Utils.GetBaseUrl(_httpContextAccessor.HttpContext?.Request),
+                $"collections/{baseResource}/styles/{styleId}?f={format}"),
                 Rel = "stylesheet",
                 Type = FormatToContentType.GetContentTypeForFormat(format)
-            };
-            links.Add(link);
-        }
+            }).ToList();
 
         return new OgcStyle
         {

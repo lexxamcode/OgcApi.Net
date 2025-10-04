@@ -2,7 +2,7 @@
 
 public static class FormatToExtensionMapper
 {
-    private static readonly Dictionary<string, string> mappings = new() {
+    private static readonly Dictionary<string, string> Mappings = new() {
         { "mapbox", "json" },
         { "sld10", "xml" },
         { "sld11", "xml" }
@@ -10,7 +10,7 @@ public static class FormatToExtensionMapper
 
     public static string GetFileExtensionForFormat(string format)
     {
-        var isExtensionPresent = mappings.TryGetValue(format, out var extension);
+        var isExtensionPresent = Mappings.TryGetValue(format, out var extension);
         if (!isExtensionPresent || extension is null)
             throw new Exception($"Not found file extension for file format {format}");
 

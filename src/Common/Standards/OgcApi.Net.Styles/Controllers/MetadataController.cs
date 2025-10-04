@@ -7,11 +7,11 @@ namespace OgcApi.Net.Styles.Controllers;
 
 [EnableCors("OgcApi")]
 [ApiController]
-[Route("api/ogc/collections")]
+[Route("api/ogc/collections/{collectionId}/styles/{styleId}/metadata")]
 [ApiExplorerSettings(GroupName = "ogc")]
 public class MetadataController(IMetadataStorage metadataStorage) : ControllerBase
 {
-    [HttpGet("{collectionId}/styles/{styleId}/metadata")]
+    [HttpGet]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -28,7 +28,7 @@ public class MetadataController(IMetadataStorage metadataStorage) : ControllerBa
         }
     }
 
-    [HttpPut("{collectionId}/styles/{styleId}/metadata")]
+    [HttpPut]
     [Consumes("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -45,7 +45,7 @@ public class MetadataController(IMetadataStorage metadataStorage) : ControllerBa
         }
     }
 
-    [HttpPatch("{collectionId}/styles/{styleId}/metadata")]
+    [HttpPatch]
     [Consumes("application/merge-patch+json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
